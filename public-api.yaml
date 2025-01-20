@@ -1,0 +1,2532 @@
+openapi: 3.0.3
+info:
+    description: "This is Humand Public API's Documentation. To use this api you will have to
+        send an api key in the Authorization HTTP header as follows: 'Basic
+        {{api_key}}'"
+    version: 1.0.0
+    title: Humand Public API
+    contact:
+        email: backend@humand.co
+security:
+    - api_key: []
+tags:
+    - name: user
+      description: User's CRUD endpoints
+    - name: post
+      description: Post's CRUD endpoints
+    - name: document
+      description: Document's CRUD endpoints
+    - name: file
+      description: File's CRUD endpoints
+    - name: article
+      description: Article's CRUD endpoints
+    - name: segmentation
+      description: Segmentation's CRUD endpoints
+    - name: acknowledgements
+      description: Acknowledgement's CRUD endpoints
+    - name: products
+      description: Products's endpoints
+    - name: exchanges
+      description: Exchanges's endpoints
+    - name: time-off
+      description: Time off's endpoints
+    - name: groups
+      description: Groups endpoints
+paths:
+    /exchanges:
+        get:
+            tags:
+                - exchanges
+            summary: Get all exchanges
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Exchange'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /products:
+        post:
+            tags:
+                - products
+            summary: Create a product
+            requestBody:
+                $ref: '#/components/requestBodies/Product'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /products/{id}:
+        put:
+            tags:
+                - products
+            summary: Edit a product
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            requestBody:
+                $ref: '#/components/requestBodies/Product'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Product'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+        delete:
+            tags:
+                - products
+            summary: Delete a product
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            responses:
+                '204':
+                    description: 204 - NO_CONTENT
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /users:
+        get:
+            tags:
+                - user
+            summary: List users
+            description: List users, including searching and pagination
+            operationId: listUsers
+            parameters:
+                - $ref: '#/components/parameters/Search'
+                - $ref: '#/components/parameters/Page'
+                - $ref: '#/components/parameters/Limit'
+            responses:
+                '200':
+                    description: User list retrieved
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Users'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+        post:
+            tags:
+                - user
+            summary: Create user
+            description: Creates a new user
+            operationId: createUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUser'
+                description: User object to be created.
+            responses:
+                '201':
+                    description: User created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+        put:
+            tags:
+                - user
+            summary: Upsert user
+            description: Update an existing user or create new one if it does not exist
+            operationId: upsertUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUser'
+                description: User object to be updated or created.
+            responses:
+                '201':
+                    description: User updated or created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /users/me:
+        get:
+            tags:
+                - user
+            summary: Get user profile
+            description: Get the basic information of the logged user
+            operationId: getMe
+            responses:
+                '200':
+                    description: User retrieved
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /users/put:
+        post:
+            tags:
+                - user
+            summary: Upsert user
+            description: Update an existing user or create new one if it does not exist
+            operationId: upsertUser2
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateUser'
+                description: User object to be updated or created.
+            responses:
+                '201':
+                    description: User updated or created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/deactivate:
+        post:
+            tags:
+                - user
+            summary: Deactivate user
+            description: Deactivate user given internal employee id
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            responses:
+                '204':
+                    description: 204 - NO_CONTENT
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/segmentations:
+        patch:
+            tags:
+                - user
+            summary: Edit partially user segmentation
+            description: Remove previous segmentations belongs to groups received in the body and add requested segmentations
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                segmentation:
+                                    type: array
+                                    items:
+                                        $ref: '#/components/schemas/Segmentation'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+        post:
+            tags:
+                - user
+            summary: Create user segmentation
+            description: Add segmentation to user
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                segmentations:
+                                    type: array
+                                    items:
+                                        $ref: '#/components/schemas/Segmentation'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}:
+        get:
+            tags:
+                - user
+            summary: Get user by employee internal id
+            description: Get the basic information of a user
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            operationId: getUser
+            responses:
+                '200':
+                    description: User retrieved
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+        patch:
+            tags:
+                - user
+            summary: Partially update user
+            description: Update an existing user
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            operationId: updateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUser'
+                description: User object to be updated.
+            responses:
+                '201':
+                    description: User updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+        delete:
+            tags:
+                - user
+            summary: Delete user
+            description: Deletes a user
+            operationId: deleteUser
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            responses:
+                '204':
+                    description: User deleted
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/delete:
+        post:
+            tags:
+                - user
+            summary: Delete user
+            description: Deletes a user
+            operationId: deleteUser2
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            responses:
+                '204':
+                    description: User deleted
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/profile-fields:
+        patch:
+            tags:
+                - user
+            summary: Update user profile fields
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                fields:
+                                    type: array
+                                    items:
+                                        $ref: '#/components/schemas/Field'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/documents/files:
+        post:
+            tags:
+                - document
+            summary: Add document for user
+            description: Adds a document whose owner is employeeInternalId
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            requestBody:
+                $ref: '#/components/requestBodies/Document'
+            responses:
+                '201':
+                    description: Document created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Document'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /posts:
+        post:
+            tags:
+                - post
+            summary: Create post
+            description: Creates a new post given the params
+            operationId: createPost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreatePost'
+                description: Post's object to be created.
+            responses:
+                '201':
+                    description: Post created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Post'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /users/{employeeInternalId}/profile-picture:
+        put:
+            tags:
+                - user
+            summary: Add profile picture for user
+            description: Adds a profile picture whose owner is employeeInternalId
+            parameters:
+                - $ref: '#/components/parameters/EmployeeInternalId'
+            requestBody:
+                $ref: '#/components/requestBodies/ProfilePicture'
+            responses:
+                '201':
+                    description: Profile picture updated
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /segmentations:
+        get:
+            tags:
+                - segmentation
+            summary: Get segmentations
+            description: Get all segmentations with items
+            operationId: getSegmentations
+            responses:
+                '200':
+                    description: Segmentations retrieved
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SegmentationList'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+        post:
+            tags:
+                - segmentation
+            summary: Create segmentation group
+            description: Create a new segmentation group
+            operationId: createSegmentationGroup
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateOrUpdateSegmentationGroup'
+                description: Segmentation group creation data
+            responses:
+                '201':
+                    description: Segmentation Group Created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SegmentationGroup'
+                '400':
+                    description: Invalid params supplied
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /segmentations/groups/{groupName}:
+        put:
+            tags:
+                - segmentation
+            summary: Update segmentation group
+            description: Update a segmentation group
+            operationId: updateSegmentationGroup
+            parameters:
+                - in: path
+                  name: groupName
+                  description: Group name
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateOrUpdateSegmentationGroup'
+                description: Segmentation group edition data
+            responses:
+                '201':
+                    description: Segmentation Group Updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SegmentationGroup'
+                '400':
+                    description: Invalid params supplied
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /segmentations/groups/{groupName}/items:
+        post:
+            tags:
+                - segmentation
+            summary: Add items to group
+            description: Add items to segmentationGroup
+            operationId: addItemsToGroup
+            parameters:
+                - in: path
+                  name: groupName
+                  description: Group name
+                  required: true
+                  schema:
+                      type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddItemsToGroup'
+                description: Segmentation group edition data
+            responses:
+                '201':
+                    description: Segmentation Group Updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SegmentationGroup'
+                '400':
+                    description: Invalid params supplied
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+    /files:
+        post:
+            tags:
+                - file
+            summary: Create file
+            description: Creates a file
+            requestBody:
+                $ref: '#/components/requestBodies/File'
+            responses:
+                '201':
+                    description: File created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/File'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /files/folders:
+        post:
+            tags:
+                - file
+            summary: Create folder
+            description: Creates a folder
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateFolder'
+            responses:
+                '201':
+                    description: File created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/File'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /files/{id}:
+        delete:
+            tags:
+                - file
+            summary: Delete a file
+            description: Deletes a file by id
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            responses:
+                '204':
+                    description: No content
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+        patch:
+            tags:
+                - file
+            summary: Edit a file
+            description: Updates a file by id
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EditFile'
+            responses:
+                '202':
+                    description: Accepted
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+    /acknowledgements:
+        post:
+            tags:
+                - acknowledgements
+            summary: Create an acknowledgement
+            requestBody:
+                $ref: '#/components/requestBodies/Acknowledgement'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Acknowledgement'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /articles:
+        post:
+            tags:
+                - article
+            summary: Create an article
+            description: Creates an article
+            requestBody:
+                $ref: '#/components/requestBodies/Article'
+            responses:
+                '201':
+                    description: Article created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Article'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /articles/{id}:
+        put:
+            tags:
+                - article
+            summary: Edit an article
+            description: Updates an article by id
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EditArticle'
+            responses:
+                '201':
+                    description: Article updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Article'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+            security:
+                - api_key: []
+        delete:
+            tags:
+                - article
+            summary: Delete an article
+            description: Deletes an article by id
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            responses:
+                '204':
+                    description: No content
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /forms/{id}/answers:
+        get:
+            tags:
+                - forms
+            summary: Get answers of form
+            description: Get all answers with user answers of form
+            parameters:
+                - $ref: '#/components/parameters/Id'
+                - $ref: '#/components/parameters/Page'
+                - $ref: '#/components/parameters/Limit'
+                - $ref: '#/components/parameters/Order'
+                - $ref: '#/components/parameters/FormAnswersOrderBy'
+                - $ref: '#/components/parameters/CreationDate'
+            responses:
+                '200':
+                    description: Form answers
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/FormAnswersPaginated'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /time-off/requests:
+        get:
+            tags:
+                - time-off
+            summary: Get time off requests
+            description: List paginated time off requests with filters
+            parameters:
+                - $ref: '#/components/parameters/Page'
+                - $ref: '#/components/parameters/Limit'
+                - $ref: '#/components/parameters/TimeOffRequestStates'
+                - $ref: '#/components/parameters/PolicyTypeIds'
+                - $ref: '#/components/parameters/TimeOffFromDate'
+                - $ref: '#/components/parameters/TimeOffToDate'
+                - $ref: '#/components/parameters/TimeOffResolutionFromDate'
+                - $ref: '#/components/parameters/TimeOffResolutionToDate'
+            responses:
+                '200':
+                    description: Time off requests retrieved
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TimeOffRequestsPaginated'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /time-off/policy-types/{id}/balances/correction:
+        post:
+            tags:
+                - time-off
+            summary: Manual correction of time off balances
+            description: Manual correction of time off balances
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Balance'
+            responses:
+                '204':
+                    description: 204 - NO_CONTENT
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+            security:
+                - api_key: []
+    /time-tracking/entries/clockIn:
+        post:
+            tags:
+                - time-tracking
+            summary: Clock in
+            description: Create a start type time tracking entry with associated data
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TimeTrackingEntryRequest'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TimeTrackingEntry'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /time-tracking/entries/clockOut:
+        post:
+            tags:
+                - time-tracking
+            summary: Clock Out
+            description: Create an end type time tracking entry with associated data
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/TimeTrackingEntryRequest'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/TimeTrackingEntry'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /chats/{receiverEmployeeInternalId}:
+        get:
+            tags:
+                - chats
+            summary: Get chats where the receiver is involved, there receiver must be a bot. Only 1-1 chats are returned.
+            parameters:
+                - $ref: '#/components/parameters/Page'
+                - $ref: '#/components/parameters/ChatsLimit'
+                - $ref: '#/components/parameters/ReceiverEmployeeInternalId'
+                - $ref: '#/components/parameters/Unread'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedListChats'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /chats/{id}/messages:
+        get:
+            tags:
+                - chats
+            summary: Get messages from a specific chat. Unread flag filters unread messages, meanwhile receiverEmployeeInternalId filters messages sent to a specific receiver where the receiver must be a bot. This endpoint does not change the unread status of the messages returned.
+            parameters:
+                - $ref: '#/components/parameters/ChatMessagesLimit'
+                - $ref: '#/components/parameters/Page'
+                - $ref: '#/components/parameters/Unread'
+                - $ref: '#/components/parameters/ReceiverEmployeeInternalId'
+                - $ref: '#/components/parameters/Id'
+            responses:
+                '200':
+                    description: 200 - OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PaginatedMessages'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+        post:
+            tags:
+                - chats
+            summary: Create a chat message. Constraints -> 1. Chat must be a 1-1 chat, 2. the sender must be a bot user.
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            requestBody:
+                $ref: '#/components/requestBodies/Message'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Message'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '403':
+                    $ref: '#/components/responses/ForbiddenError'
+                '404':
+                    $ref: '#/components/responses/NotFoundError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /api/v1/chats/one-to-one-chats:
+        post:
+            tags:
+                - chats
+            summary: Create a chat between 'user' and 'otherUser', if chat already exist it will return that chat.
+            requestBody:
+                $ref: '#/components/requestBodies/Chat'
+            responses:
+                '201':
+                    description: 201 - CREATED
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/OneToOneChat'
+                '400':
+                    $ref: '#/components/responses/BadRequestError'
+                '500':
+                    $ref: '#/components/responses/UnexpectedError'
+    /groups/{id}/posts:
+        post:
+            tags:
+                - groups
+            summary: Create a group post
+            description: Creates a new post given the params
+            parameters:
+                - $ref: '#/components/parameters/Id'
+            operationId: createGroupPost
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateGroupPost'
+                description: Post's object to be created.
+            responses:
+                '201':
+                    description: Post created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GroupPost'
+                '401':
+                    $ref: '#/components/responses/UnauthorizedError'
+            security:
+                - api_key: []
+
+externalDocs:
+    description: Find out more about Swagger
+    url: https://swagger.io
+
+servers:
+    - url: '{{publicUrl}}'
+
+components:
+    securitySchemes:
+        api_key:
+            type: apiKey
+            in: header
+            name: Authorization
+            description: Basic {{api_key}}
+    parameters:
+        Page:
+            name: page
+            in: query
+            description: Page for pagination
+            schema:
+                $ref: '#/components/schemas/PositiveInteger'
+        Limit:
+            name: limit
+            in: query
+            description: Limit for pagination
+            schema:
+                type: integer
+                minimum: 10
+                default: 10
+        ChatsLimit:
+            name: limit
+            in: query
+            description: Limit for pagination
+            schema:
+                type: integer
+                default: 50
+        ChatMessagesLimit:
+            name: limit
+            in: query
+            description: Limit for pagination
+            schema:
+                type: integer
+                default: 50
+        Unread:
+            name: unread
+            in: query
+            description: To filter unread chats or messages (depending on endpoint). If false, return all chats/messages
+            schema:
+                type: boolean
+                default: false
+        Search:
+            name: search
+            in: query
+            description: Term for searching
+            schema:
+                type: string
+                default: Search term
+        EmployeeInternalId:
+            name: employeeInternalId
+            in: path
+            description: Employee internal id
+            required: true
+            schema:
+                type: string
+                default: Employee internal id
+        ReceiverEmployeeInternalId:
+            name: receiverEmployeeInternalId
+            in: path
+            description: A receiver is used for chats and messages. A receiver for chats lets you filter all chats where the receiver belongs to, meanwhile a receiver for messages lets you filter all messages sent to the receiver.
+            required: true
+            schema:
+                type: string
+                default: Employee internal id
+        Id:
+            name: id
+            in: path
+            description: Entity id
+            required: true
+            schema:
+                type: integer
+        Order:
+            name: order
+            in: query
+            required: false
+            description: Used to select the sort type for response columns (asc o desc)
+            schema:
+                $ref: '#/components/schemas/Order'
+
+        FormAnswersOrderBy:
+            name: orderBy
+            in: query
+            required: false
+            description: Used to sort response columns
+            schema:
+                $ref: '#/components/schemas/FormAnswersOrderBy'
+
+        CreationDate:
+            name: creationDate
+            in: query
+            required: false
+            description: Used to get results by creation date
+            schema:
+                $ref: '#/components/schemas/DateString'
+
+        TimeOffRequestStates:
+            name: states
+            in: query
+            required: false
+            description: Used to get results by states
+            schema:
+                type: string
+                example: APPROVED,IN_PROGRESS
+
+        PolicyTypeIds:
+            name: policyTypeIds
+            in: query
+            required: false
+            description: Used to get results by policy type ids
+            schema:
+                type: string
+                example: 1,2,3
+
+        TimeOffFromDate:
+            name: fromDate
+            in: query
+            required: false
+            description: Retrieve results based on a starting date. Includes all requests with days from this date onwards.
+            schema:
+                $ref: '#/components/schemas/DateString'
+
+        TimeOffToDate:
+            name: toDate
+            in: query
+            required: false
+            description: Retrieve results based on and end date. Includes all requests up to and including this date.
+            schema:
+                $ref: '#/components/schemas/DateString'
+
+        TimeOffResolutionFromDate:
+            name: resolutionFromDate
+            in: query
+            required: false
+            description: Retrieve results for which the review process ended after this date. Includes all requests with resolution date from this date onwards.
+            schema:
+                $ref: '#/components/schemas/DateString'
+
+        TimeOffResolutionToDate:
+            name: resolutionToDate
+            in: query
+            required: false
+            description: Retrieve results for which the review process before after this date. Includes all requests with resolution date up to and including this date.
+            schema:
+                $ref: '#/components/schemas/DateString'
+
+    requestBodies:
+        Product:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        properties:
+                            name:
+                                type: string
+                                default: Product name
+                            cost:
+                                $ref: '#/components/schemas/Integer'
+                            coverPicture:
+                                type: string
+                                default: https://product-cover-picture.com
+                            attachments:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/AttachmentInBody'
+                        required:
+                            - name
+                            - cost
+                            - coverPicture
+        Document:
+            required: true
+            content:
+                multipart/form-data:
+                    schema:
+                        type: object
+                        properties:
+                            file:
+                                type: string
+                                format: binary
+                            folderId:
+                                $ref: '#/components/schemas/PositiveInteger'
+                            name:
+                                type: string
+                                default: File name
+                            sendNotification:
+                                type: boolean
+                                default: false
+                            signatureStatus:
+                                $ref: '#/components/schemas/SignatureStatus'
+                            signatureCoordinates:
+                                $ref: '#/components/schemas/PDFCoordinates'
+                            allowDisagreement:
+                                type: boolean
+                                default: false
+                        required:
+                            - file
+        File:
+            required: true
+            content:
+                multipart/form-data:
+                    schema:
+                        type: object
+                        properties:
+                            file:
+                                type: string
+                                format: binary
+                            folderId:
+                                $ref: '#/components/schemas/PositiveInteger'
+                            name:
+                                type: string
+                                default: File name
+                            sendNotification:
+                                type: boolean
+                                default: false
+                            # FIXME: segmentation and segmentationUsers do not work through Swagger. They should be exploded, but it is not compatible with Swagger UI for now.
+                            segmentation:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Segmentation'
+                            segmentationUsers:
+                                type: array
+                                items:
+                                    type: string
+                        required:
+                            - file
+        Acknowledgement:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            body:
+                                type: string
+                                default: Acknowledgment body
+                            acknowledgedUsername:
+                                type: string
+                                default: Acknowledged user username
+                            acknowledgementCategoryName:
+                                type: string
+                                default: Acknowledgement category name
+                            acknowledgerUsername:
+                                type: string
+                                default: Acknowledger username
+                        required:
+                            - body
+                            - acknowledgedUsername
+                            - acknowledgementCategoryName
+                            - acknowledgerUsername
+        ProfilePicture:
+            required: true
+            content:
+                multipart/form-data:
+                    schema:
+                        type: object
+                        properties:
+                            file:
+                                type: string
+                                format: binary
+                        required:
+                            - file
+        Article:
+            required: true
+            content:
+                multipart/form-data:
+                    schema:
+                        type: object
+                        properties:
+                            coverPicture:
+                                type: string
+                                format: binary
+                            title:
+                                type: string
+                                default: Article title
+                            body:
+                                type: string
+                                default: Article body
+                            # FIXME: segmentation and segmentationUsers do not work through Swagger. They should be exploded, but it is not compatible with Swagger UI for now.
+                            segmentation:
+                                type: array
+                                items:
+                                    $ref: '#/components/schemas/Segmentation'
+                            segmentationUsers:
+                                type: array
+                                items:
+                                    type: string
+                        required:
+                            - title
+                            - body
+                            - coverPicture
+        Message:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: object
+                                properties:
+                                    text:
+                                        type: string
+                                        minLength: 1
+                                        default: message text
+                                    type:
+                                        type: string
+                                        minLength: 1
+                                        enum: [TEXT, FILE, AUDIO]
+                            senderEmployeeInternalId:
+                                type: string
+                            replyMessageId:
+                                type: number
+                        required:
+                            - message
+                            - senderEmployeeInternalId
+        Chat:
+            required: true
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            user:
+                                type: object
+                                properties:
+                                    employeeInternalId:
+                                        type: string
+                            otherUser:
+                                type: object
+                                properties:
+                                    employeeInternalId:
+                                        type: string
+                        required:
+                            - user
+                            - otherUser
+
+    schemas:
+        Exchange:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                status:
+                    type: string
+                    default: exchangeStatus
+                statusColor:
+                    $ref: '#/components/schemas/ColorString'
+                cost:
+                    $ref: '#/components/schemas/Integer'
+                productId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                product:
+                    $ref: '#/components/schemas/Product'
+                userEmployeeInternalId:
+                    type: string
+                    default: user123
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                updatedAt:
+                    $ref: '#/components/schemas/DateTime'
+        Product:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: Product name
+                cost:
+                    $ref: '#/components/schemas/Integer'
+                coverPicture:
+                    type: string
+                    default: https://product-cover-picture.com
+                description:
+                    type: string
+                    default: Product description
+                category:
+                    $ref: '#/components/schemas/ProductCategory'
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+        ProductCategory:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: Product category name
+        AttachmentInBody:
+            type: object
+            properties:
+                url:
+                    type: string
+                    minLength: 1
+                    default: https://attachment-url.com
+                type:
+                    $ref: '#/components/schemas/AttachmentType'
+                height:
+                    $ref: '#/components/schemas/Integer'
+                width:
+                    $ref: '#/components/schemas/Integer'
+                size:
+                    $ref: '#/components/schemas/FileSize'
+                name:
+                    type: string
+                    minLength: 1
+                    default: attachment name
+            required:
+                - type
+                - url
+        FileSize:
+            type: string
+            minLength: 1
+            default: 1 MB
+        ExternalReferenceInBody:
+            type: object
+            properties:
+                id:
+                    type: string
+                    default: abcd1234
+                origin:
+                    $ref: '#/components/schemas/AttachmentOrigin'
+            required:
+                - id
+                - origin
+        AttachmentOrigin:
+            type: string
+            enum: [GIPHY]
+        PositiveInteger:
+            type: integer
+            minimum: 1
+            default: 1
+        DateString:
+            type: string
+            format: date
+            example: 2022-01-01
+        DateTime:
+            type: string
+            format: date-time
+            default: '2021-07-10T22:50:00.010Z'
+        CreateUser:
+            allOf:
+                - type: object
+                  properties:
+                      password:
+                          description: Only used for creating users, not when updating one.
+                          type: string
+                          default: password
+                  required:
+                      - password
+                - $ref: '#/components/schemas/UserBodyWithoutPassword'
+        RegularUserFields:
+            type: object
+            properties:
+                employeeInternalId:
+                    type: string
+                    description: userEmployeeInternalId
+                email:
+                    type: string
+                    default: user@email.com
+                firstName:
+                    type: string
+                    default: User first name
+                lastName:
+                    type: string
+                    default: User last name
+                nickname:
+                    type: string
+                    default: userNickName
+                phoneNumber:
+                    type: string
+                    default: '+5491123456789'
+                hiringDate:
+                    $ref: '#/components/schemas/DateString'
+                birthdate:
+                    $ref: '#/components/schemas/DateString'
+        UpdateUser:
+            allOf:
+                - type: object
+                  properties:
+                      segmentation:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Segmentation'
+                      relationships:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Relationship'
+                      password:
+                          type: string
+                          default: password
+                - $ref: '#/components/schemas/RegularUserFields'
+        UserBodyWithoutPassword:
+            allOf:
+                - type: object
+                  properties:
+                      segmentation:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Segmentation'
+                      relationships:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Relationship'
+                      fields:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Field'
+                - $ref: '#/components/schemas/RegularUserFields'
+            required:
+                - employeeInternalId
+                - firstName
+                - lastName
+        Segmentation:
+            type: object
+            properties:
+                group:
+                    type: string
+                    default: Segmentation group name
+                item:
+                    type: string
+                    default: Segmentation item name
+        Balance:
+            type: object
+            properties:
+                employeeInternalId:
+                    type: string
+                    default: userEmployeeInternalId
+                operation:
+                    type: string
+                    enum: [ADDITION, SUBTRACT]
+                amount:
+                    type: number
+                    example: 1
+                observations:
+                    type: string
+                    default: Observations
+        Field:
+            type: object
+            properties:
+                id:
+                    type: string
+                    example: 7b122126-f8ec-4410-b163-8389ed21e79f
+                name:
+                    type: string
+                    default: Dynamic field name
+                value:
+                    oneOf:
+                        - type: string
+                        - type: integer
+                        - type: array
+                          items:
+                              type: string
+                        - type: array
+                          items:
+                              type: integer
+                    default: Dynamic field value
+            required:
+                - value
+        SegmentationList:
+            type: array
+            items:
+                $ref: '#/components/schemas/CompleteSegmentation'
+        CompleteSegmentation:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SegmentationItem'
+                isEditable:
+                    type: boolean
+                visibility:
+                    type: string
+                position:
+                    type: integer
+                    format: int32
+        SegmentationItem:
+            type: object
+            properties:
+                name:
+                    type: string
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                groupId:
+                    type: integer
+                    format: int32
+                usersCount:
+                    type: integer
+                    format: int32
+                position:
+                    type: integer
+                    format: int32
+                sharedId:
+                    type: string
+                    default: Segmentation item sharedId
+        Relationship:
+            type: object
+            properties:
+                name:
+                    type: string
+                    enum:
+                        - BOSS
+                employeeInternalId:
+                    type: string
+                    default: userEmployeeInternalId
+        Users:
+            type: object
+            properties:
+                count:
+                    $ref: '#/components/schemas/PositiveInteger'
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User'
+
+        PublicUser:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                firstName:
+                    type: string
+                    default: User first name
+                lastName:
+                    type: string
+                    default: User last name
+                profilePicture:
+                    type: string
+                    default: https://profile-picture.com
+                employeeInternalId:
+                    type: string
+                    default: userEmployeeInternalId
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                deleted:
+                    type: boolean
+                    default: false
+                email:
+                    type: string
+                    default: email@email.com
+                hiringDate:
+                    $ref: '#/components/schemas/DateString'
+
+        User:
+            allOf:
+                - type: object
+                  properties:
+                      id:
+                          $ref: '#/components/schemas/PositiveInteger'
+                      createdAt:
+                          $ref: '#/components/schemas/DateTime'
+                      updatedAt:
+                          $ref: '#/components/schemas/DateTime'
+                      deleted:
+                          type: boolean
+                          default: false
+                      hasBeenLogged:
+                          type: boolean
+                          default: true
+                      status:
+                          $ref: '#/components/schemas/UserStatus'
+                - $ref: '#/components/schemas/UserBodyWithoutPassword'
+        UserStatus:
+            type: string
+            enum: [ACTIVE, DEACTIVATED, UNCLAIMED]
+        CreatePost:
+            type: object
+            properties:
+                body:
+                    type: string
+                bodyHtml:
+                    type: string
+                sendNotification:
+                    type: boolean
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AttachmentInBody'
+                publicationDatetime:
+                    $ref: '#/components/schemas/DateTime'
+                poll:
+                    $ref: '#/components/schemas/PollInBody'
+                segmentation:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Segmentation'
+                segmentationUsers:
+                    type: array
+                    items:
+                        type: string
+        Post:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                body:
+                    type: string
+                updatedAt:
+                    type: string
+                createdAt:
+                    type: string
+                poll:
+                    type: string
+                commentCount:
+                    type: integer
+                    format: int32
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+                user:
+                    type: object
+                bodyHtml:
+                    type: string
+                    default: Post body in html format
+                    nullable: true
+                reactions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Reaction'
+                hasBeenSegmented:
+                    type: boolean
+                    default: true
+                public:
+                    type: boolean
+                    default: false
+                sendNotification:
+                    type: boolean
+                    default: true
+                linkPreviews:
+                    type: boolean
+                    default: true
+                languageCode:
+                    type: string
+                approvalStatus:
+                    type: string
+                    enum:
+                        - APPROVED
+                        - REJECTED
+                        - PENDING
+        CreateGroupPost:
+            type: object
+            properties:
+                body:
+                    type: string
+                bodyHtml:
+                    type: string
+                sendNotification:
+                    type: boolean
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AttachmentInBody'
+                publicationDatetime:
+                    $ref: '#/components/schemas/DateTime'
+                poll:
+                    $ref: '#/components/schemas/PollInBody'
+        GroupPost:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                body:
+                    type: string
+                updatedAt:
+                    type: string
+                createdAt:
+                    type: string
+                poll:
+                    type: string
+                commentCount:
+                    type: integer
+                    format: int32
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+                user:
+                    type: object
+                bodyHtml:
+                    type: string
+                    default: Post body in html format
+                    nullable: true
+                reactions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Reaction'
+                sendNotification:
+                    type: boolean
+                    default: true
+                linkPreviews:
+                    type: boolean
+                    default: true
+                languageCode:
+                    type: string
+                approvalStatus:
+                    type: string
+                    enum:
+                        - APPROVED
+                        - REJECTED
+                        - PENDING
+        PollInBody:
+            type: object
+            properties:
+                pollOptions:
+                    type: array
+                    items:
+                        type: string
+                        default: Poll option
+            required:
+                - pollOptions
+        AddItemsToGroup:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        type: string
+                        default: Segmentation item name
+        CreateOrUpdateSegmentationGroup: # Not adding sharedID here on purpose, internal use only for now
+            type: object
+            properties:
+                name:
+                    type: string
+                    default: Segmentation group name
+                itemNames:
+                    type: array
+                    items:
+                        type: string
+                        default: Segmentation item name
+                visibility:
+                    $ref: '#/components/schemas/Visibility'
+            required:
+                - name
+                - itemNames
+        SegmentationGroup:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                name:
+                    type: string
+                    default: Segmentation group name
+                items:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/SegmentationItem'
+                isEditable:
+                    type: boolean
+                    default: true
+                visibility:
+                    $ref: '#/components/schemas/Visibility'
+                position:
+                    type: integer
+                    format: int32
+                sharedId:
+                    type: string
+                    default: Segmentation group sharedId
+        Visibility:
+            type: string
+            enum: [ALL, USER_AND_ADMINS, ADMINS_ONLY]
+        CreateDocument:
+            type: object
+            properties:
+                file:
+                    type: string
+                    format: binary
+                folderId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: File name
+                sendNotification:
+                    type: boolean
+                    default: false
+                signatureStatus:
+                    $ref: '#/components/schemas/SignatureStatus'
+                allowDisagreement:
+                    type: boolean
+                    default: false
+        Document:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: Document name
+                source:
+                    type: string
+                    default: document-source.com
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                signatureStatus:
+                    $ref: '#/components/schemas/SignatureStatus'
+                extension:
+                    type: string
+                    default: pdf
+                folderId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                ownerId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                allowDisagreement:
+                    type: boolean
+                    default: false
+        SignatureStatus:
+            type: string
+            enum: [SIGNED_IN_DISAGREEMENT, SIGNATURE_NOT_NEEDED, PENDING, SIGNED, SIGNED_IN_AGREEMENT]
+        CreateFolder:
+            type: object
+            properties:
+                folderId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: File name
+                segmentation:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Segmentation'
+                segmentationUsers:
+                    type: array
+                    items:
+                        type: string
+        EditFile:
+            type: object
+            properties:
+                name:
+                    type: string
+                    default: File name
+                segmentation:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Segmentation'
+                segmentationUsers:
+                    type: array
+                    items:
+                        type: string
+        File:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: FileName
+                type:
+                    type: string
+                    default: fileType
+                source:
+                    type: string
+                    default: File source
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                updatedAt:
+                    $ref: '#/components/schemas/DateTime'
+                uploader:
+                    $ref: '#/components/schemas/User'
+                shared:
+                    type: boolean
+                    default: true
+                public:
+                    type: boolean
+                    default: false
+                extension:
+                    type: string
+                    default: .ext
+                parentId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                parentName:
+                    type: string
+                    default: Parent name
+                position:
+                    $ref: '#/components/schemas/PositiveInteger'
+        Article:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                coverPicture:
+                    type: string
+                    default: https://article-cover-picture.com
+                body:
+                    type: string
+                    default: Article body
+                title:
+                    type: string
+                    default: Article title
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                updatedAt:
+                    $ref: '#/components/schemas/DateTime'
+                public:
+                    type: boolean
+                    default: false
+                position:
+                    $ref: '#/components/schemas/PositiveInteger'
+                segmentation:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Segmentation'
+                segmentationUsers:
+                    type: array
+                    items:
+                        type: string
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+        EditArticle:
+            type: object
+            properties:
+                coverPictureUrl:
+                    type: string
+                    default: https://article-cover-picture.com
+                body:
+                    type: string
+                    default: Article body
+                title:
+                    type: string
+                    default: Article title
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/AttachmentInBody'
+                segmentation:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Segmentation'
+            required:
+                - body
+                - title
+                - coverPictureUrl
+
+        PDFCoordinates:
+            type: object
+            properties:
+                page:
+                    $ref: '#/components/schemas/PositiveInteger'
+                x:
+                    $ref: '#/components/schemas/Float'
+                y:
+                    $ref: '#/components/schemas/Float'
+                width:
+                    $ref: '#/components/schemas/Float'
+                height:
+                    $ref: '#/components/schemas/Float'
+        Float:
+            type: number
+            default: 10.5
+        Acknowledgement:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                body:
+                    type: string
+                    default: acknowledgment body
+                points:
+                    $ref: '#/components/schemas/Integer'
+                acknowledger:
+                    $ref: '#/components/schemas/User'
+                acknowledged:
+                    $ref: '#/components/schemas/User'
+                category:
+                    $ref: '#/components/schemas/AcknowledgementCategory'
+                updatedAt:
+                    $ref: '#/components/schemas/DateTime'
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+                reactions:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Reaction'
+                commentCount:
+                    $ref: '#/components/schemas/Integer'
+        Integer:
+            type: integer
+            default: 1
+        AcknowledgementCategory:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: acknowledgment category name
+                points:
+                    $ref: '#/components/schemas/Integer'
+                color:
+                    $ref: '#/components/schemas/ColorString'
+                coverPicture:
+                    type: string
+                    default: https://acknowledgement-category-cover-picture.com
+        ColorString:
+            type: string
+            default: '#ffffff'
+        Reaction:
+            type: object
+            properties:
+                emoji:
+                    type: string
+                    default: :P
+                count:
+                    $ref: '#/components/schemas/Integer'
+                isLoggedUserReaction:
+                    type: boolean
+                    default: true
+        Order:
+            type: string
+            enum: [ASC, DESC, ASC_NULLS_FIRST, DESC_NULLS_LAST]
+        FormAnswersOrderBy:
+            type: string
+            enum: [CREATOR, CREATED_AT]
+        FormAnswersPaginated:
+            allOf:
+                - $ref: '#/components/schemas/PaginatedResponse'
+                - type: object
+                  properties:
+                      items:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/FormAnswer'
+        FormAnswer:
+            type: object
+            properties:
+                answers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Answer'
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                fileAnswerSources:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/FormFileAnswerSource'
+                formId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                userId:
+                    $ref: '#/components/schemas/PositiveInteger'
+        Answer:
+            type: object
+            properties:
+                answer:
+                    type: string
+                    default: Answer
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+                questionId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                rowId:
+                    $ref: '#/components/schemas/PositiveInteger'
+        FormFileAnswerSource:
+            type: object
+            properties:
+                url:
+                    type: string
+                    default: https://bucket.com/folder/file.pdf
+        Attachment:
+            type: object
+            properties:
+                url:
+                    type: string
+                    default: https://bucket.com/folder/file.png
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                type:
+                    $ref: '#/components/schemas/AttachmentType'
+        AttachmentType:
+            type: string
+            enum: [VIDEO, IMAGE, FILE, AUDIO, GIF]
+
+        TimeOffRequestsPaginated:
+            allOf:
+                - $ref: '#/components/schemas/PaginatedResponse'
+                - type: object
+                  properties:
+                      items:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/TimeOffRequest'
+
+        TimeOffRequest:
+            type: object
+            properties:
+                amountRequested:
+                    $ref: '#/components/schemas/Integer'
+                from:
+                    $ref: '#/components/schemas/TimeOffRequestDate'
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                issuer:
+                    $ref: '#/components/schemas/PublicUser'
+                policyType:
+                    $ref: '#/components/schemas/TimeOffPolicyType'
+                state:
+                    $ref: '#/components/schemas/TimeOffRequestState'
+                stepState:
+                    $ref: '#/components/schemas/TimeOffRequestStepState'
+                to:
+                    $ref: '#/components/schemas/TimeOffRequestDate'
+                resolutionDate:
+                    $ref: '#/components/schemas/DateTime'
+                resolutionReason:
+                    type: string
+                    default: TimeOff request resolution reason
+                description:
+                    type: string
+                    default: TimeOff request description
+                cycle:
+                    $ref: '#/components/schemas/TimesOffCycle'
+
+        TimesOffCycle:
+            type: object
+            properties:
+                title:
+                    type: string
+                    default: Time off cycle title
+                startDate:
+                    $ref: '#/components/schemas/DateString'
+                endDate:
+                    $ref: '#/components/schemas/DateString'
+
+        TimeOffPolicyType:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                name:
+                    type: string
+                    default: Time off policy type name
+
+        TimeOffRequestState:
+            type: string
+            enum: [APPROVED, IN_PROGRESS, REJECTED, CANCELLED]
+
+        TimeOffRequestStepState:
+            type: string
+            enum: [APPROVED, PENDING, REJECTED, WAITING_OTHER_STEP]
+
+        TimeOffRequestDate:
+            type: object
+            properties:
+                consumptionType:
+                    $ref: '#/components/schemas/TimeOffConsumptionType'
+                date:
+                    $ref: '#/components/schemas/DateString'
+
+        TimeOffConsumptionType:
+            type: string
+            enum: [HALF_DAY, FULL_DAY]
+            default: FULL_DAY
+            example: FULL_DAY
+
+        PaginatedResponse:
+            type: object
+            properties:
+                limit:
+                    $ref: '#/components/schemas/PositiveInteger'
+                page:
+                    $ref: '#/components/schemas/PositiveInteger'
+                totalPages:
+                    $ref: '#/components/schemas/PositiveInteger'
+                count:
+                    $ref: '#/components/schemas/PositiveInteger'
+        TimeTrackingEntryRequest:
+            type: object
+            properties:
+                employeeId:
+                    description: The employee internal id
+                    $ref: '#/components/schemas/PositiveInteger'
+                now:
+                    description: The time for creating the entry. Can be past but not future
+                    $ref: '#/components/schemas/DateTime'
+                comment:
+                    description: A comment for the entry
+                    type: string
+        TimeTrackingEntry:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                userId:
+                    $ref: '#/components/schemas/PositiveInteger'
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                updatedAt:
+                    $ref: '#/components/schemas/DateTime'
+                time:
+                    $ref: '#/components/schemas/DateTime'
+                comment:
+                    type: string
+                type:
+                    type: string
+                    enum: [START, END]
+                source:
+                    type: string
+                    default: [USER, AUTO_CLOSE, DAY_CHANGE]
+
+        PaginatedListChats:
+            allOf:
+                - $ref: '#/components/schemas/PaginatedResponse'
+                - type: object
+                  properties:
+                      items:
+                          type: array
+                          items:
+                              oneOf:
+                                  - $ref: '#/components/schemas/OneToOneChat'
+        OneToOneChat:
+            allOf:
+                - $ref: '#/components/schemas/Chatable'
+                - type: object
+                  properties:
+                      chatType:
+                          type: string
+                          default: REGULAR
+        ChatType:
+            type: string
+            enum: [REGULAR]
+        Chatable:
+            type: object
+            properties:
+                chatType:
+                    $ref: '#/components/schemas/ChatType'
+                chat:
+                    $ref: '#/components/schemas/Chat'
+        Chat:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                otherUser:
+                    type: object
+                    properties:
+                        employeeInternalId:
+                            type: string
+                unreadMessages:
+                    $ref: '#/components/schemas/Integer'
+
+        PaginatedMessages:
+            allOf:
+                - $ref: '#/components/schemas/PaginatedResponse'
+                - type: object
+                  properties:
+                      items:
+                          type: array
+                          items:
+                              $ref: '#/components/schemas/Message'
+        MessageType:
+            type: string
+            enum: [TEXT, FILE, BUTTON, AUDIO, INFO, INFO_PARAMS]
+        Message:
+            type: object
+            properties:
+                id:
+                    $ref: '#/components/schemas/PositiveInteger'
+                sender:
+                    type: object
+                    properties:
+                        employeeInternalId:
+                            type: string
+                text:
+                    type: string
+                    default: message text
+                attachments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Attachment'
+                createdAt:
+                    $ref: '#/components/schemas/DateTime'
+                type:
+                    $ref: '#/components/schemas/MessageType'
+                chatId:
+                    $ref: '#/components/schemas/PositiveInteger'
+    responses:
+        BadRequestError:
+            description: Invalid parameters provided
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                default: The provided data is invalid
+                            code:
+                                type: string
+                                default: INVALID_DATA
+
+        UnauthorizedError:
+            description: API Key is missing or invalid
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                default: Invalid credentials
+                            code:
+                                type: string
+                                default: UNKNOWN_TOKEN
+
+        ForbiddenError:
+            description: You are not allowed to access this resource
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                default: Cannot access this resource
+                            code:
+                                type: string
+                                default: ACCESS_DENIED
+
+        NotFoundError:
+            description: Resource not found
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                default: Resource not found
+                            code:
+                                type: string
+                                default: NOT_FOUND
+
+        UnexpectedError:
+            description: 500 - INTERNAL_SERVER_ERROR
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            message:
+                                type: string
+                                default: An unexpected error has occurred
+                            code:
+                                type: string
+                                enum: [UNKNOWN_ERROR, DATABASE_ERROR, ILLEGAL_STATE]
