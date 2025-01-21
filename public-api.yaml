@@ -973,12 +973,12 @@ paths:
         get:
             tags:
                 - chats
-            summary: Get messages from a specific chat. Unread flag filters unread messages, meanwhile receiverEmployeeInternalId filters messages sent to a specific receiver where the receiver must be a bot. This endpoint does not change the unread status of the messages returned.
+            summary: Get messages from a specific chat.
+            description: Unread flag filters unread messages, meanwhile receiverEmployeeInternalId filters messages sent to a specific receiver where the receiver must be a bot. This endpoint does not change the unread status of the messages returned.
             parameters:
                 - $ref: '#/components/parameters/ChatMessagesLimit'
                 - $ref: '#/components/parameters/Page'
                 - $ref: '#/components/parameters/Unread'
-                - $ref: '#/components/parameters/ReceiverEmployeeInternalId'
                 - $ref: '#/components/parameters/Id'
             responses:
                 '200':
